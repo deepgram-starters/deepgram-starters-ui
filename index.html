@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html>
-  <head></head>
+  <head>
+    <script src="//unpkg.com/tailwindcss-jit-cdn@1.3.0"></script>
+    <script type="tailwind-config">
+      {
+        theme: {
+          extend: {
+            colors: {}
+          }
+        }
+      }
+    </script>
+    <script type="module" src="./nav-bar.js"></script>
+  </head>
 
   <body>
-    <script type="module">
-      console.log("hello world!");
-    </script>
+    <nav-bar></nav-bar>
   </body>
 </html>
