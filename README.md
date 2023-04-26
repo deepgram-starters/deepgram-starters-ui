@@ -4,7 +4,7 @@ This is a zero-build frontend application that serves the purpose of being a re-
 
 ## Web components
 
-The application is built using native web components, to achieve a zero-build state of functionality.
+The application is built using `lit` web components from skypack, to achieve a zero-build state of functionality.
 
 ## Run locally
 
