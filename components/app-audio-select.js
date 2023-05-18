@@ -177,17 +177,17 @@ class AppAudioSelect extends LitElement {
       ${this.files.map(
         (item) =>
           html`<li key="${item.key}" class="audio-file">
-            <input
-              class="sr-only peer audio-example"
-              type="radio"
-              name="audio"
-              value="${item.value}"
-              defaultChecked="${item.checked}"
-              id="${item.key}"
-              ?disabled="${this.working}"
-              @change="${this._dispatchSelectCdnAudio}"
-            />
             <label class="audio-file-label" htmlFor="${item.key}">
+              <input
+                class="sr-only peer audio-example"
+                type="radio"
+                name="audio"
+                value="${item.value}"
+                defaultChecked="${item.checked}"
+                id="${item.key}"
+                ?disabled="${this.working}"
+                @change="${this._dispatchSelectCdnAudio}"
+              />
               <p class="label-text">${item.name}</p>
             </label>
           </li>`
@@ -207,7 +207,6 @@ class AppAudioSelect extends LitElement {
     }
   }
   _dispatchSelectCdnAudio() {
-    console.log("hit");
     const selectedExample = this._example.value;
     if (selectedExample) {
       const options = {
