@@ -6,6 +6,7 @@ class AppAudioSelect extends LitElement {
     error: {},
     working: {},
     file: {},
+    selectedExample: {},
   };
 
   static styles = css`
@@ -116,6 +117,7 @@ class AppAudioSelect extends LitElement {
   constructor() {
     super();
     this.working = false;
+    this.selectedExample = "";
     this.files = [
       {
         key: "podcast",
@@ -149,6 +151,16 @@ class AppAudioSelect extends LitElement {
   get _example() {
     return (this.___example ??=
       this.renderRoot?.querySelector(".audio-example") ?? null);
+  }
+
+  handleChange(e) {
+    this.selectedExample = e.target.value;
+    const options = {
+      detail: this.selectedExample,
+      bubbles: true,
+      composed: true,
+    };
+    this.dispatchEvent(new CustomEvent("exampleselect", options));
   }
 
   render() {
@@ -186,7 +198,7 @@ class AppAudioSelect extends LitElement {
                 defaultChecked="${item.checked}"
                 id="${item.key}"
                 ?disabled="${this.working}"
-                @change="${this._dispatchSelectCdnAudio}"
+                @change="${this.handleChange}"
               />
               <p class="label-text">${item.name}</p>
             </label>
@@ -207,10 +219,9 @@ class AppAudioSelect extends LitElement {
     }
   }
   _dispatchSelectCdnAudio() {
-    const selectedExample = this._example.value;
-    if (selectedExample) {
+    if (this.selectedExample) {
       const options = {
-        detail: { selectedExample },
+        detail: this.selectedExample,
         bubbles: true,
         composed: true,
       };

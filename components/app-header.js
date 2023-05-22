@@ -50,6 +50,7 @@ class AppHeader extends LitElement {
       display: inline;
       height: 2rem;
       margin-bottom: -5px;
+      margin-right: 1rem;
     }
 
     .nav-heading {
@@ -57,6 +58,7 @@ class AppHeader extends LitElement {
     }
 
     .nav-brand {
+      color: white;
       align-items: center;
       display: flex;
       height: 4rem;
@@ -76,6 +78,7 @@ class AppHeader extends LitElement {
       <div class="nav-margin">
         <div class="nav-brand">
           <img src="assets/dg.svg" class="nav-logo" />
+          <div>Starter Apps</div>
         </div>
 
         <app-button-link url="${this.url}" class="secondary">

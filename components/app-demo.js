@@ -59,7 +59,6 @@ class AppDemo extends LitElement {
         @exampleselect=${this._exampleSelectListener}
         class="app-demo"
       >
-        <h2 class="demo-instructions ">Choose an audio file</h2>
         <slot></slot>
       </div>
       <p>Model: ${this.selectedModel}</p>
@@ -76,7 +75,7 @@ class AppDemo extends LitElement {
     this.file = e.detail.selectedFile;
   }
   _exampleSelectListener(e) {
-    this.fileUrl = e.detail.selectedExample;
+    this.fileUrl = e.detail;
   }
 }
 

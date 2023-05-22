@@ -16,7 +16,7 @@ class AppModelSelect extends LitElement {
       /* md:flex-row */
       flex-direction: row;
       /* justify-end */
-      justify-content: flex-end;
+      justify-content: center;
       /* items-center */
       align-items: center;
       /* gap-y-3 */

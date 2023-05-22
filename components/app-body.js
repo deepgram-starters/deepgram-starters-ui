@@ -39,17 +39,9 @@ class AppBody extends LitElement {
 
   render() {
     return html`<article class="body">
-      <app-hero
-        title="Node.js Starter App"
-        logo="assets/dg-black.svg"
-        url="https://github.com/deepgram-starters/deepgram-javascript-starters/tree/main/Starter-01"
-        >This is a starter application that demonstrates integrating
-        <a href="https://deepgram.com/">Deepgram</a>. This version has a
-        <a>Node Express server</a>, with a Lit Web Components client.</app-hero
-      >
       <app-demo>
-        <app-audio-select></app-audio-select>
         <app-model-select></app-model-select>
+        <app-audio-select></app-audio-select>
       </app-demo>
     </article>`;
   }
