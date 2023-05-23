@@ -7,6 +7,7 @@ class AppAudioSelect extends LitElement {
     working: {},
     file: {},
     selectedExample: {},
+    selectedFile: {},
   };
 
   static styles = css`
@@ -18,7 +19,8 @@ class AppAudioSelect extends LitElement {
       gap: 1.25rem;
       /* sm:grid-cols-2 */
       /* lg:grid-cols-4 */
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: 40% 10% 40%;
       /* gap-x-4 */
       column-gap: 1rem;
       /* mx-auto */
@@ -26,7 +28,7 @@ class AppAudioSelect extends LitElement {
       margin-right: auto;
     }
 
-    .audio-item {
+    .audio-own {
       /* relative */
       position: relative;
     }
@@ -42,10 +44,10 @@ class AppAudioSelect extends LitElement {
       white-space: nowrap;
       border-width: 0;
     }
-    .audio-item-label {
+    .audio-own-label {
       /* peer-disabled:opacity-50 */
       /* min-h-full */
-      min-height: 100%;
+
       /* flex */
       display: flex;
       /* flex-col */
@@ -62,11 +64,10 @@ class AppAudioSelect extends LitElement {
       padding-top: 1.25rem;
       padding-bottom: 1.25rem;
       /* shadow-lg */
-      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-        0 4px 6px -4px rgb(0 0 0 / 0.1);
+
       /* sm:p-6 */
       /* cursor-pointer */
-      cursor: pointer;
+
       /* focus:outline-none */
       /* hover:bg-gray-50 */
       /* peer-checked:bg-iris */
@@ -118,6 +119,8 @@ class AppAudioSelect extends LitElement {
     super();
     this.working = false;
     this.selectedExample = "";
+    this.selectedFile = {};
+    this.file = {};
     this.files = [
       {
         key: "podcast",
@@ -143,9 +146,9 @@ class AppAudioSelect extends LitElement {
     ];
   }
 
-  get _file() {
-    return (this.___file ??=
-      this.renderRoot?.querySelector("#file").files[0] ?? null);
+  get _fileInput() {
+    return (this.___fileInput ??=
+      this.renderRoot?.querySelector("#file") ?? null);
   }
 
   get _example() {
@@ -154,64 +157,69 @@ class AppAudioSelect extends LitElement {
   }
 
   handleChange(e) {
+    this.selectedFile = {};
     this.selectedExample = e.target.value;
-    const options = {
-      detail: this.selectedExample,
-      bubbles: true,
-      composed: true,
-    };
-    this.dispatchEvent(new CustomEvent("exampleselect", options));
+    this._dispatchSelectCdnAudio();
   }
 
   render() {
     return html`<ul class="app-audio-select">
-      <li class="audio-item">
+      <li class="audio-own">
         <input
           class="sr-only peer"
           type="radio"
           name="audio"
           ?disabled="${this.working}"
         />
-        <label class="audio-item-label" htmlFor="file">
-          <p class="label-text">Select an audio or video file to transcribe.</p>
-          <input
-            class="sr-only"
-            id="file"
-            type="file"
-            name="file"
-            accept="audio/*,video/*"
-            ?disabled="${this.working}"
-            @change="${this._dispatchSelectUploadFile}"
-          />
+        <label class="audio-own-label" htmlFor="file">
+          <p class="label-text">Use your own audio</p>
         </label>
+        <input
+          class="sr-only"
+          id="file"
+          type="file"
+          name="file"
+          accept="audio/*,video/*"
+          ?disabled="${this.working}"
+          @change="${this._dispatchSelectUploadFile}"
+        />
+        <input type="button" @click="${this.chooseFile}" value="Choose file" />
       </li>
-
-      ${this.files.map(
-        (item) =>
-          html`<li key="${item.key}" class="audio-file">
-            <label class="audio-file-label" htmlFor="${item.key}">
-              <input
-                class="sr-only peer audio-example"
-                type="radio"
-                name="audio"
-                value="${item.value}"
-                defaultChecked="${item.checked}"
-                id="${item.key}"
-                ?disabled="${this.working}"
-                @change="${this.handleChange}"
-              />
-              <p class="label-text">${item.name}</p>
-            </label>
-          </li>`
-      )}
+      <li style="display:flex; flex-direction:column; justify-content:center;">
+        OR
+      </li>
+      <div>
+        ${this.files.map(
+          (item) =>
+            html`<li key="${item.key}" class="audio-file">
+              <label class="audio-file-label" htmlFor="${item.key}">
+                <input
+                  class="sr-only peer audio-example"
+                  type="radio"
+                  name="audio"
+                  value="${item.value}"
+                  defaultChecked="${item.checked}"
+                  id="${item.key}"
+                  ?disabled="${this.working}"
+                  @change="${this.handleChange}"
+                />
+                <p class="label-text">${item.name}</p>
+              </label>
+            </li>`
+        )}
+      </div>
     </ul>`;
   }
 
+  chooseFile() {
+    this._fileInput.click();
+  }
+
   _dispatchSelectUploadFile() {
-    const selectedFile = this._file;
-    if (selectedFile) {
+    this.selectedFile = this._fileInput.files[0];
+    if (this.selectedFile) {
       const options = {
-        detail: { selectedFile },
+        detail: this.selectedFile,
         bubbles: true,
         composed: true,
       };

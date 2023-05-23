@@ -3,6 +3,7 @@ import { html, css, LitElement } from "//cdn.skypack.dev/lit";
 class AppModelSelect extends LitElement {
   static properties = {
     models: {},
+    selectedModel: "",
   };
   static styles = css`
     .app-model-select {
@@ -28,6 +29,7 @@ class AppModelSelect extends LitElement {
 
   constructor() {
     super();
+    this.selectedModel = "";
     this.models = [
       {
         model: "nova",
@@ -57,10 +59,10 @@ class AppModelSelect extends LitElement {
   }
 
   _dispatchSelectModel() {
-    const selectedModel = this._select.value;
-    if (selectedModel) {
+    this.selectedModel = this._select.value;
+    if (this.selectedModel) {
       const options = {
-        detail: { selectedModel },
+        detail: this.selectedModel,
         bubbles: true,
         composed: true,
       };
