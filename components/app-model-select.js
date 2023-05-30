@@ -32,9 +32,9 @@ class AppModelSelect extends LitElement {
     this.selectedModel = "";
     this.models = [
       {
-        model: "nova",
+        model: "general",
         name: "Deepgram Nova",
-        tier: "general",
+        tier: "nova",
       },
       {
         model: "whisper",
@@ -49,20 +49,32 @@ class AppModelSelect extends LitElement {
       this.renderRoot?.querySelector("select") ?? null);
   }
 
+  firstUpdated() {
+    this.renderRoot.querySelector("select").selectedIndex = 0;
+    this._dispatchSelectModel();
+  }
+
   render() {
     return html`<div class="app-model-select">
       <label>Select a transcription model:</label
       ><select @change=${this._dispatchSelectModel}>
-        ${this.models.map((model) => html`<option>${model.name}</option>`)}
+        ${this.models.map(
+          (model) => html`<option data-model="${model}">${model.name}</option>`
+        )}
       </select>
     </div>`;
   }
 
   _dispatchSelectModel() {
     this.selectedModel = this._select.value;
+
+    const model = this.models.filter((model) => {
+      return model.name === this.selectedModel;
+    });
+
     if (this.selectedModel) {
       const options = {
-        detail: this.selectedModel,
+        detail: model,
         bubbles: true,
         composed: true,
       };

@@ -151,8 +151,8 @@ class AppAudioSelect extends LitElement {
       this.renderRoot?.querySelector("#file") ?? null);
   }
 
-  get _example() {
-    return (this.___example ??=
+  get _fileURL() {
+    return (this.___fileURL ??=
       this.renderRoot?.querySelector(".audio-example") ?? null);
   }
 
@@ -160,6 +160,16 @@ class AppAudioSelect extends LitElement {
     this.selectedFile = {};
     this.selectedExample = e.target.value;
     this._dispatchSelectCdnAudio();
+  }
+
+  handleClick() {
+    if (this._fileInput) {
+      this._fileInput.value = null;
+    }
+
+    if (this._fileURL) {
+      this._dispatchSelectCdnAudio();
+    }
   }
 
   render() {
@@ -182,6 +192,7 @@ class AppAudioSelect extends LitElement {
           accept="audio/*,video/*"
           ?disabled="${this.working}"
           @change="${this._dispatchSelectUploadFile}"
+          @click="${this.handleClick}"
         />
         <input type="button" @click="${this.chooseFile}" value="Choose file" />
       </li>
@@ -202,6 +213,7 @@ class AppAudioSelect extends LitElement {
                   id="${item.key}"
                   ?disabled="${this.working}"
                   @change="${this.handleChange}"
+                  @click="${this.handleClick}"
                 />
                 <p class="label-text">${item.name}</p>
               </label>
@@ -233,7 +245,7 @@ class AppAudioSelect extends LitElement {
         bubbles: true,
         composed: true,
       };
-      this.dispatchEvent(new CustomEvent("exampleselect", options));
+      this.dispatchEvent(new CustomEvent("fileURLselect", options));
     }
   }
 }

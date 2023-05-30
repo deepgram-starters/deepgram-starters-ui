@@ -1,29 +1,26 @@
 import { html, css, LitElement } from "//cdn.skypack.dev/lit";
+import "./app-transcript.js";
 
 class AppDemo extends LitElement {
   static properties = {
-    // models: {},
-    // files: {},
-    // availableFeatures: {},
-    // featureMap: {},
-    // error: {},
-    // utterances: {},
-    // summaries: {},
-    // topics: {},
-    // language: {},
-    // transcript: {},
-    // done: {},
-    // working: {},
+    error: {},
+    done: {},
+    working: {},
     selectedModel: {},
-    // features: {},
     file: {},
     fileUrl: {},
-    // apiOrigin: {},
-    selectedFeatures: [],
+    selectedFeatures: {},
+    resSummaries: {},
+    resTopics: {},
+    resLanguage: {},
+    resTranscript: {},
+    resParagraphs: {},
   };
 
   static styles = css`
     .app-demo {
+      display: flex;
+      flex-direction: column;
       /* mx-auto */
       margin-left: auto;
       margin-right: auto;
@@ -43,6 +40,15 @@ class AppDemo extends LitElement {
       /* mb-4 */
       margin-bottom: 1rem;
     }
+
+    .submit-button {
+      margin-top: 3rem;
+      padding-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
   `;
 
   constructor() {
@@ -50,22 +56,55 @@ class AppDemo extends LitElement {
     this.selectedModel = "";
     this.file = {};
     this.fileUrl = "";
-    this.selectedFeatures = [];
+    this.selectedFeatures = {};
+    this.error = "";
+    this.done = true;
+    this.working = false;
+    this.resSummaries = [];
+    this.resTopics = [];
+    this.resLanguage = [];
+    this.resTranscript = [];
+    this.resParagraphs = [];
   }
 
-  submitRequest() {
-    const apiKey = "YOUR_API_KEY";
-    const apiOrigin = "http://localhost:8000/api";
+  async submitRequest() {
+    this.done = false;
+    this.working = true;
+    const apiOrigin = "http://localhost:3001";
     const formData = new FormData();
-    //  formData.append("features", JSON.stringify(features));
-    //  formData.append("file", file);
-    //  formData.append("url", url);
-    //  formData.append("model", selectedModel.model);
+    formData.append("file", this.file);
+    formData.append("url", this.fileUrl);
+    formData.append("model", this.selectedModel.model);
+    formData.append("tier", this.selectedModel.tier);
+    formData.append("features", JSON.stringify(this.selectedFeatures));
     console.log("submit request");
-    console.log(this.selectedModel);
-    console.log(this.file);
-    console.log(this.fileUrl);
-    console.log(this.selectedFeatures);
+
+    try {
+      const response = await fetch(`${apiOrigin}/api`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const { err, transcription } = await response.json();
+      if (err) throw Error(err);
+      const { results } = transcription;
+      this.resTranscript = results.channels[0].alternatives[0].transcript;
+      this.resSummaries = results.channels[0].alternatives[0].summaries[0];
+      this.resTopics = results.channels[0].alternatives[0].topics[0].topics;
+      this.resLanguage = results.channels[0].detected_language;
+      this.resParagraphs = results.channels[0].alternatives[0].paragraphs;
+      // console.log(this.resTranscript);
+      // console.log(this.resSummaries);
+      // console.log(this.resTopics);
+      // console.log(this.resLanguage);
+      // console.log(this.resParagraphs);
+      this.requestUpdate();
+      this.done = true;
+      this.working = false;
+    } catch (error) {
+      this.error = error;
+      this.working = false;
+    }
   }
 
   render() {
@@ -73,30 +112,41 @@ class AppDemo extends LitElement {
       <div
         @fileselect=${this._fileSelectListener}
         @modelselect=${this._modelSelectListener}
-        @exampleselect=${this._exampleSelectListener}
+        @fileURLselect=${this._fileURLSelectListener}
         @featureselect=${this._featureSelectListener}
         class="app-demo"
       >
         <slot></slot>
       </div>
-      <button @click="${this.submitRequest}">Transcribe</button>
-      <p>Model: ${this.selectedModel}</p>
+      <div class="submit-button">
+        <button @click="${this.submitRequest}">Transcribe</button>
+        <p>${this.error}</p>
+      </div>
+      <p>Model: ${this.selectedModel.name}</p>
       <p>File: ${this.file.name}</p>
       <p>Example: ${this.fileUrl}</p>
       <p>Selected Features: ${this.selectedFeatures}</p>
+      <div>
+        <app-transcript>
+          ${this.resSummaries} ${this.resTopics} ${this.resLanguage}
+          ${this.resTranscript}${this.resParagraphs}
+        </app-transcript>
+      </div>
     `;
   }
 
   _modelSelectListener(e) {
-    this.selectedModel = e.detail;
+    this.selectedModel = e.detail[0];
   }
 
   _fileSelectListener(e) {
     this.file = e.detail;
+    this.fileUrl = "";
     this.requestUpdate();
   }
-  _exampleSelectListener(e) {
+  _fileURLSelectListener(e) {
     this.fileUrl = e.detail;
+    this.file = {};
     this.requestUpdate();
   }
   _featureSelectListener(e) {
