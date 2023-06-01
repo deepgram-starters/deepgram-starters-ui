@@ -15,8 +15,8 @@ class AppBody extends LitElement {
   render() {
     return html`<article class="body">
       <app-demo>
-        <app-model-select></app-model-select>
         <app-audio-select></app-audio-select>
+        <app-model-select></app-model-select>
         <app-feature-select></app-feature-select>
       </app-demo>
     </article>`;

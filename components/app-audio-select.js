@@ -12,24 +12,22 @@ class AppAudioSelect extends LitElement {
 
   static styles = css`
     .app-audio-select {
-      /* grid */
+      width: 80rem;
       display: grid;
-      /* grid-cols-1 */
-      /* gap-5 */
       gap: 1.25rem;
-      /* sm:grid-cols-2 */
-      /* lg:grid-cols-4 */
       grid-template-columns: repeat(3, minmax(0, 1fr));
       grid-template-columns: 40% 10% 40%;
-      /* gap-x-4 */
       column-gap: 1rem;
-      /* mx-auto */
-      margin-left: auto;
-      margin-right: auto;
+      padding-inline-start: 0px;
+      justify-items: center;
+    }
+
+    ul {
+      list-style: none;
     }
 
     .audio-own {
-      /* relative */
+      width: 80%;
       position: relative;
     }
 
@@ -44,74 +42,86 @@ class AppAudioSelect extends LitElement {
       white-space: nowrap;
       border-width: 0;
     }
+
+    .button-choose-file {
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 0.0625rem;
+      background: linear-gradient(95deg, #1796c1 20%, #15bdae 40%, #13ef95 95%);
+      height: 45px;
+      width: 250px;
+      cursor: pointer;
+    }
+
     .audio-own-label {
-      /* peer-disabled:opacity-50 */
-      /* min-h-full */
-
-      /* flex */
+      font-size: 20px;
       display: flex;
-      /* flex-col */
       flex-direction: column;
-      /* p-5 */
-
-      /* rounded-lg */
-      border-radius: 0.5rem;
-      /* bg-white */
-      /* px-4 */
-      padding-left: 1rem;
-      padding-right: 1rem;
-      /* py-5 */
-      padding-top: 1.25rem;
       padding-bottom: 1.25rem;
-      /* shadow-lg */
+    }
 
-      /* sm:p-6 */
-      /* cursor-pointer */
-
-      /* focus:outline-none */
-      /* hover:bg-gray-50 */
-      /* peer-checked:bg-iris */
-      /* peer-checked:text-white */
+    .audio-files-label {
+      font-size: 20px;
     }
 
     .label-text {
-      /* text-center */
-      /* lg:text-left */
+      margin: 0;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+    .or-text {
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10px;
+      font-size: 14px;
+      display: inline-block;
+      position: relative;
+      margin-top: 50px;
+    }
+
+    .or-text:before {
+      content: "";
+      width: 1px;
+      height: 50px;
+      background: #616165;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+    }
+
+    .or-text:after {
+      content: "";
+      width: 1px;
+      height: 160px;
+      background: #616165;
+      position: absolute;
+      bottom: -70%;
+      left: 50%;
     }
 
     .audio-file {
-      /* relative */
-      position: relative;
+      margin-bottom: 10px;
+      border-radius: 0.0625rem;
+      height: 51px;
+      background: #2e3c4d;
+      padding-left: 16px;
+      padding-right: 80px;
+      border: solid #3d4f66 1px;
+      box-shadow: 0 20px 25px -5px black, 0 8px 10px -6px black;
     }
 
     .audio-file-label {
-      /* peer-disabled:opacity-50 */
-      /* min-h-full  */
+      font-size: 14px;
       min-height: 100%;
-      /* flex  */
       display: flex;
-      /* flex-col  */
+      justify-content: center;
       flex-direction: column;
-      /* p-5  */
-      /* rounded-lg */
       border-radius: 0.5rem;
-      /* bg-white */
-      /* px-4 */
-      padding-left: 1rem;
-      padding-right: 1rem;
-      /* py-5 */
-      padding-top: 1.25rem;
-      padding-bottom: 1.25rem;
-      /* shadow-lg */
-      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-        0 4px 6px -4px rgb(0 0 0 / 0.1);
-      /* sm:p-6 */
-      /* cursor-pointer */
       cursor: pointer;
-      /* focus:outline-none */
-      /* hover:bg-gray-50 */
-      /* peer-checked:bg-iris */
-      /* peer-checked:text-white */
     }
   `;
 
@@ -124,21 +134,21 @@ class AppAudioSelect extends LitElement {
     this.files = [
       {
         key: "podcast",
-        name: "Podcast: Deep Learning’s Effect on Science",
+        name: "PODCAST: Deep Learning’s Effect on Science",
         checked: true,
         value:
           "https://res.cloudinary.com/deepgram/video/upload/v1663090404/dg-audio/AI_Show_afpqeh.m4a",
       },
       {
         key: "phone",
-        name: "Phone call: First all female NASA Spacewalk",
+        name: "PHONE CALL: First all female NASA Spacewalk",
         checked: false,
         value:
           "https://res.cloudinary.com/deepgram/video/upload/v1663090406/dg-audio/NASA-EXP61_EVA_n5zazi.m4a",
       },
       {
         key: "callcenter",
-        name: "Call Center: Upgrade Service",
+        name: "CALL CENTER: Upgrade Service",
         checked: false,
         value:
           "https://res.cloudinary.com/deepgram/video/upload/v1663090406/dg-audio/Upgrading-phone-plan_pmfsfm.m4a",
@@ -184,6 +194,7 @@ class AppAudioSelect extends LitElement {
         <label class="audio-own-label" htmlFor="file">
           <p class="label-text">Use your own audio</p>
         </label>
+
         <input
           class="sr-only"
           id="file"
@@ -194,12 +205,24 @@ class AppAudioSelect extends LitElement {
           @change="${this._dispatchSelectUploadFile}"
           @click="${this.handleClick}"
         />
-        <input type="button" @click="${this.chooseFile}" value="Choose file" />
+
+        <input
+          class="button-choose-file"
+          type="button"
+          @click="${this.chooseFile}"
+          value="Upload Audio File"
+        />
+        <p style="max-width:450px; ">
+          We accept over 40 common audio file formats including MP3, WAV, FLAC,
+          M4A, and more.
+        </p>
       </li>
-      <li style="display:flex; flex-direction:column; justify-content:center;">
-        OR
-      </li>
-      <div>
+      <li class="or-text">OR</li>
+      <ul>
+        <label class="audio-files-label">
+          <p class="label-text">Pick a sample file</p>
+        </label>
+
         ${this.files.map(
           (item) =>
             html`<li key="${item.key}" class="audio-file">
@@ -215,11 +238,11 @@ class AppAudioSelect extends LitElement {
                   @change="${this.handleChange}"
                   @click="${this.handleClick}"
                 />
-                <p class="label-text">${item.name}</p>
+                ${item.name}
               </label>
             </li>`
         )}
-      </div>
+      </ul>
     </ul>`;
   }
 

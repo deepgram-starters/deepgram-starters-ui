@@ -38,7 +38,7 @@ class AppButtonLink extends LitElement {
 
     :host(.secondary) {
       background: transparent;
-      border: 1px solid gray;
+      border: 1px solid #00e062;
       color: inherit;
     }
 
