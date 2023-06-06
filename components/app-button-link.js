@@ -28,10 +28,8 @@ class AppButtonLink extends LitElement {
     }
 
     :host(.large) {
-      /* px-3.5 */
       padding-left: 0.875rem;
       padding-right: 0.875rem;
-      /* py-2.5 */
       padding-top: 0.625rem;
       padding-bottom: 0.625rem;
     }

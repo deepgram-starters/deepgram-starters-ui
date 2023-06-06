@@ -54,6 +54,10 @@ class AppAudioSelect extends LitElement {
       cursor: pointer;
     }
 
+    .selected-file {
+      color: rgb(239, 0, 116);
+    }
+
     .audio-own-label {
       font-size: 20px;
       display: flex;
@@ -108,10 +112,13 @@ class AppAudioSelect extends LitElement {
       border-radius: 0.0625rem;
       height: 51px;
       background: #2e3c4d;
-      padding-left: 16px;
-      padding-right: 80px;
+
       border: solid #3d4f66 1px;
       box-shadow: 0 20px 25px -5px black, 0 8px 10px -6px black;
+    }
+
+    .audio-file.active {
+      background: #3d4f66;
     }
 
     .audio-file-label {
@@ -122,6 +129,8 @@ class AppAudioSelect extends LitElement {
       flex-direction: column;
       border-radius: 0.5rem;
       cursor: pointer;
+      padding-left: 16px;
+      padding-right: 80px;
     }
   `;
 
@@ -166,6 +175,11 @@ class AppAudioSelect extends LitElement {
       this.renderRoot?.querySelector(".audio-example") ?? null);
   }
 
+  get _audioFile() {
+    return (this.___audioFile ??=
+      this.renderRoot?.querySelectorAll(".audio-file") ?? null);
+  }
+
   handleChange(e) {
     this.selectedFile = {};
     this.selectedExample = e.target.value;
@@ -175,10 +189,72 @@ class AppAudioSelect extends LitElement {
   handleClick() {
     if (this._fileInput) {
       this._fileInput.value = null;
+      this.selectedFile = null;
     }
 
     if (this._fileURL) {
       this._dispatchSelectCdnAudio();
+      this._fileInput.value = null;
+    }
+  }
+
+  showSelected(e) {
+    this._audioFile.forEach((node) => {
+      if (
+        e.target.value &&
+        e.target.value == node.childNodes[1].childNodes[1].value
+      ) {
+        node.className += " active";
+      }
+    });
+    for (let i = 0; i < this._audioFile.length; i++) {
+      this._audioFile[i].className = this._audioFile[i].className.replace(
+        " active",
+        ""
+      );
+    }
+    this._audioFile.forEach((li) => {
+      if (li.innerText == e.target.innerText) {
+        li.className += " active";
+        this.currentCategory = e.target.innerText;
+        this.requestUpdate();
+      }
+    });
+  }
+
+  clearSelected() {
+    for (let i = 0; i < this._audioFile.length; i++) {
+      this._audioFile[i].className = this._audioFile[i].className.replace(
+        " active",
+        ""
+      );
+    }
+  }
+
+  chooseFile() {
+    this._fileInput.click();
+    this.clearSelected();
+  }
+
+  _dispatchSelectUploadFile() {
+    this.selectedFile = this._fileInput.files[0];
+    if (this.selectedFile) {
+      const options = {
+        detail: this.selectedFile,
+        bubbles: true,
+        composed: true,
+      };
+      this.dispatchEvent(new CustomEvent("fileselect", options));
+    }
+  }
+  _dispatchSelectCdnAudio() {
+    if (this.selectedExample) {
+      const options = {
+        detail: this.selectedExample,
+        bubbles: true,
+        composed: true,
+      };
+      this.dispatchEvent(new CustomEvent("fileURLselect", options));
     }
   }
 
@@ -203,7 +279,6 @@ class AppAudioSelect extends LitElement {
           accept="audio/*,video/*"
           ?disabled="${this.working}"
           @change="${this._dispatchSelectUploadFile}"
-          @click="${this.handleClick}"
         />
 
         <input
@@ -216,6 +291,9 @@ class AppAudioSelect extends LitElement {
           We accept over 40 common audio file formats including MP3, WAV, FLAC,
           M4A, and more.
         </p>
+        <div class="selected-file">
+          ${this.selectedFile ? this.selectedFile.name : null}
+        </div>
       </li>
       <li class="or-text">OR</li>
       <ul>
@@ -225,7 +303,11 @@ class AppAudioSelect extends LitElement {
 
         ${this.files.map(
           (item) =>
-            html`<li key="${item.key}" class="audio-file">
+            html`<li
+              key="${item.key}"
+              class="audio-file"
+              @click="${this.showSelected}"
+            >
               <label class="audio-file-label" htmlFor="${item.key}">
                 <input
                   class="sr-only peer audio-example"
@@ -244,32 +326,6 @@ class AppAudioSelect extends LitElement {
         )}
       </ul>
     </ul>`;
-  }
-
-  chooseFile() {
-    this._fileInput.click();
-  }
-
-  _dispatchSelectUploadFile() {
-    this.selectedFile = this._fileInput.files[0];
-    if (this.selectedFile) {
-      const options = {
-        detail: this.selectedFile,
-        bubbles: true,
-        composed: true,
-      };
-      this.dispatchEvent(new CustomEvent("fileselect", options));
-    }
-  }
-  _dispatchSelectCdnAudio() {
-    if (this.selectedExample) {
-      const options = {
-        detail: this.selectedExample,
-        bubbles: true,
-        composed: true,
-      };
-      this.dispatchEvent(new CustomEvent("fileURLselect", options));
-    }
   }
 }
 

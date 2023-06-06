@@ -1,5 +1,4 @@
 import { html, css, LitElement } from "//cdn.skypack.dev/lit";
-import "./app-hero.js";
 import "./app-demo.js";
 import "./app-audio-select.js";
 import "./app-model-select.js";

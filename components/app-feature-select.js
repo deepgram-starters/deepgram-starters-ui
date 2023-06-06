@@ -2,9 +2,9 @@ import { html, css, LitElement } from "//cdn.skypack.dev/lit";
 
 class AppFeatureSelect extends LitElement {
   static properties = {
-    features: [],
-    displayedFeatures: [],
-    selectedFeatures: [],
+    features: {},
+    displayedFeatures: {},
+    selectedFeatures: {},
     currentCategory: {},
   };
 
@@ -12,6 +12,7 @@ class AppFeatureSelect extends LitElement {
     * {
       box-sizing: border-box;
     }
+
     .app-feature-select {
       display: flex;
       justify-content: center;
@@ -20,8 +21,6 @@ class AppFeatureSelect extends LitElement {
 
     .tab {
       float: left;
-      //border: 1px solid #ccc;
-      //background-color: yellow;
       width: 20%;
       height: 300px;
     }
@@ -237,7 +236,6 @@ class AppFeatureSelect extends LitElement {
       tabcontent[i].style.display = "none";
       if (tabcontent[i].id === e.target.innerText) {
         tabcontent[i].style.display = "block";
-        console.log(tabcontent[i]);
       }
     }
 
@@ -252,6 +250,39 @@ class AppFeatureSelect extends LitElement {
         this.requestUpdate();
       }
     });
+  }
+
+  filterFeatures(item) {
+    this.displayedFeatures = [];
+    this.features.filter((i) => {
+      if (i.category === item) {
+        this.displayedFeatures.push(i);
+      }
+    });
+  }
+
+  selectFeature(e) {
+    if (this.selectedFeatures.hasOwnProperty(e.target.name)) {
+      const featureToDelete = e.target.name;
+      delete this.selectedFeatures[featureToDelete];
+    } else {
+      this.selectedFeatures[e.target.name] = true;
+    }
+
+    if (this.selectedFeatures.hasOwnProperty("diarize")) {
+      if (!this.selectedFeatures.hasOwnProperty("utterances")) {
+        // if diarize is turned on, utterances needs to be turned on for the formatter to work
+        this.selectedFeatures["utterances"] = true;
+      }
+    }
+
+    const options = {
+      detail: this.selectedFeatures,
+      bubbles: true,
+      composed: true,
+    };
+
+    this.dispatchEvent(new CustomEvent("featureselect", options));
   }
 
   render() {
@@ -319,31 +350,6 @@ class AppFeatureSelect extends LitElement {
         </section>
       </div>
     </div>`;
-  }
-
-  filterFeatures(item) {
-    this.displayedFeatures = [];
-    this.features.filter((i) => {
-      if (i.category === item) {
-        this.displayedFeatures.push(i);
-      }
-    });
-  }
-
-  selectFeature(e) {
-    if (this.selectedFeatures.hasOwnProperty(e.target.name)) {
-      const featureToDelete = e.target.name;
-      delete this.selectedFeatures[featureToDelete];
-    } else {
-      this.selectedFeatures[e.target.name] = true;
-    }
-    const options = {
-      detail: this.selectedFeatures,
-      bubbles: true,
-      composed: true,
-    };
-
-    this.dispatchEvent(new CustomEvent("featureselect", options));
   }
 }
 

@@ -27,31 +27,13 @@ class AppHeader extends LitElement {
 
     .nav-margin {
       height: 100px;
-      /* max-w-screen-2xl */
       max-width: 1536px;
-
-      /* mx-auto */
-      // margin-left: auto;
-      // margin-right: auto;
-
-      /* flex */
       display: flex;
-
-      /* flex-row */
       flex-direction: row;
-
-      /* flex-nowrap */
       flex-wrap: nowrap;
-
-      /* justify-between */
       justify-content: space-between;
-
-      /* items-stretch */
       align-items: center;
-
-      /* content-stretch */
       align-content: stretch;
-
       padding-left: 2rem;
       padding-right: 2rem;
     }
@@ -72,9 +54,6 @@ class AppHeader extends LitElement {
       align-items: center;
       display: flex;
       height: 4rem;
-    }
-
-    .nav-links {
     }
   `;
 

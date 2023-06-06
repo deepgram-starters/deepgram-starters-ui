@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "//cdn.skypack.dev/lit";
+import { html, css, LitElement } from "//cdn.skypack.dev/lit";
 
 class AppSpinner extends LitElement {
   static styles = css`
