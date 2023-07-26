@@ -11,16 +11,6 @@ class AppDemo extends LitElement {
     file: {},
     fileUrl: {},
     selectedFeatures: {},
-    resSummaries: {},
-    resTopics: {},
-    resLanguage: {},
-    resTranscript: {},
-    resParagraphs: {},
-    result: {
-      hasChanged(newVal, oldVal) {
-        console.log(newVal, oldVal);
-      },
-    },
   };
 
   static styles = css`

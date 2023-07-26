@@ -123,9 +123,11 @@ class AppTranscript extends LitElement {
         ${this.summary
           ? html` <section>Summary: ${this.summary}</section>`
           : null}
-        ${this.topics
-          ? html` <section class="topics-section">
-              Topics: ${this.topics.map((topic) => html`<div>${topic}</div>`)}
+        ${this.topics.length > 0
+          ? html` <section>
+              Topics:
+              ${this.topics &&
+              this.topics.map((topic) => html`<div>${topic}</div>`)}
             </section>`
           : null}
         ${this.diarize
