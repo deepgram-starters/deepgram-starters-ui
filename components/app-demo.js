@@ -112,6 +112,12 @@ class AppDemo extends LitElement {
       this.requestUpdate();
       this.done = true;
       this.working = false;
+      setTimeout(() => {
+        window.scrollTo({
+          top: this._button[0].getBoundingClientRect().top,
+          behavior: "smooth",
+        });
+      }, 500);
     } catch (error) {
       console.log(error);
       // this.error = error;
@@ -125,6 +131,11 @@ class AppDemo extends LitElement {
     } else {
       return null;
     }
+  }
+
+  get _button() {
+    return (this.___button ??=
+      this.renderRoot?.querySelectorAll("button") ?? null);
   }
 
   _modelSelectListener(e) {
