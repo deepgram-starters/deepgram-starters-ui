@@ -84,7 +84,7 @@ class AppDemo extends LitElement {
     this.done = false;
     this.working = true;
     this.requestUpdate();
-    const apiOrigin = "http://localhost:3001";
+    const apiOrigin = "http://localhost:8080";
     const formData = new FormData();
     if (this.file.size > 0) {
       formData.append("file", this.file);
