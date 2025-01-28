@@ -55,12 +55,7 @@ class AppModelSelect extends LitElement {
       {
         model: "general",
         name: "Deepgram Nova",
-        tier: "nova",
-      },
-      {
-        model: "whisper",
-        version: "medium",
-        name: "Whisper Cloud",
+        tier: "nova-3",
       },
     ];
   }
