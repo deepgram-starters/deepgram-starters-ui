@@ -54,7 +54,7 @@ class AppModelSelect extends LitElement {
     this.models = [
       {
         model: "general",
-        name: "Deepgram Nova",
+        name: "Deepgram Nova 3",
         tier: "nova-3",
       },
     ];
